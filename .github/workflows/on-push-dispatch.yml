@@ -1,0 +1,26 @@
+name: Prerequisite jobs
+on: [push, workflow_dispatch]
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Emulate failed job
+        run: exit 1
+
+  second-job:
+    needs: [first-job]
+    runs-on: ubuntu-latest
+    steps:
+      - name: I will not execute
+        run: echo "I will not execute"
+
+  third-job:
+    if: ${{ always() }}
+    needs: [first-job, second-job]
+    runs-on: ubuntu-latest
+    steps:
+      - name: I will execute
+        run: 
+          echo "I will execute regardless 
+          of whether they were successful"
+      
